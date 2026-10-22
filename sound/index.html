@@ -88,10 +88,9 @@ p{margin:0}
 /* app bar */
 .appbar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-block:10px 8px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand .gs-icon{display:block;width:34px;height:34px;flex:none;border-radius:9px;box-shadow:0 6px 12px -6px rgb(18 119 59 / .7)}
-.brand .wm{display:grid;gap:3px;line-height:1;min-width:0}
-.brand .wm b{font-weight:800;font-size:21px;letter-spacing:-.03em;color:var(--ink)}
-.brand .wm small{font-family:var(--mono);font-weight:500;font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--brand-ink)}
+.brand .logo{width:98px;height:31px;flex:none}
+.brand .bar{width:1.5px;height:22px;background:var(--ink);opacity:.22;flex:none}
+.brand .wm{font-weight:800;font-size:21px;letter-spacing:-.03em;color:var(--brand-ink);white-space:nowrap}
 .state{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:650;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 11px 5px 9px}
 .state i{width:8px;height:8px;border-radius:50%;background:var(--line)}
 .state[data-on="true"]{color:var(--brand-ink)}
@@ -235,7 +234,7 @@ body.playing .tile[aria-pressed="true"] .eq i:nth-child(3){animation-delay:-.55s
     </div>
 
     <header class="appbar">
-      <div class="brand" role="img" aria-label="Greenside by SubAir"><svg class="gs-icon" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gsA" x1="0" y1="0" x2=".45" y2="1"><stop offset="0" stop-color="#2DA256"/><stop offset="1" stop-color="#12773B"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#gsA)"/><path d="M37.5 23.51A15 15 0 1 0 45 36.5H32" fill="none" stroke="#fff" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M45 36.5V9.5" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path d="M46 9.2L57 13.6L46 18Z" fill="#A6E8A9" stroke="#A6E8A9" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="wm" aria-hidden="true"><b>Greenside</b><small>by SubAir</small></span></div>
+      <div class="brand" role="img" aria-label="Greenside by SubAir"><span class="logo" aria-hidden="true"></span><span class="bar" aria-hidden="true"></span><b class="wm" aria-hidden="true">Greenside</b></div>
       <span class="state" id="statePill" data-on="false"><i aria-hidden="true"></i><span id="stateTxt">Paused</span></span>
     </header>
 
