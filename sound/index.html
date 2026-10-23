@@ -986,7 +986,7 @@ const Scene = (() => {
       fanX, fanFX: fanX + 77 * fs, fanCY: surf + 1 - 203 * fs, fanRy: 62 * fs,
       hy: surf - H * 0.17, gry: H * 0.062,
       cupX: gL + (gR - gL) * 0.4, cupY: surf - H * 0.062 * 0.45, tileL: gL + inset + 10 * k,
-      poleX: W * 0.585, chX0: W * 0.61, chX1: W * 0.78,
+      poleX: W * 0.555, chX0: W * 0.61, chX1: W * 0.78,
     };
   }
   const crown = (x, g) => (x <= g.gL || x >= g.gR) ? g.surf : g.surf - 4 * g.k * Math.sin(Math.PI * (x - g.gL) / (g.gR - g.gL));
@@ -1180,12 +1180,12 @@ const Scene = (() => {
     const key = `${W}x${H}:${dpr}:${IMG.mark && IMG.mark.complete}`;
     if (flags && flagsKey === key) return;
     flagsKey = key;
-    const uh = Math.max(7, H * 0.05), uw = uh * 1.7;
+    const uh = Math.max(12, H * 0.088), uw = uh * 1.9;
     const us = off(uw, uh, x => {
-      for (let i = 0; i < 13; i++) { x.fillStyle = i % 2 ? '#FFFFFF' : '#C8102E'; x.fillRect(0, (i * uh) / 13, uw, uh / 13 + 0.6); }
-      const cw = uw * 0.42, ch = (uh * 7) / 13; x.fillStyle = '#1F2A63'; x.fillRect(0, 0, cw, ch);
-      x.fillStyle = '#FFFFFF'; const sr = Math.max(0.3, uh * 0.028);
-      for (let r = 0; r < 4; r++) for (let q = 0; q < 5; q++) { const sx = ((q + (r % 2 ? 0.75 : 0.3)) * cw) / 5.1, sy = ((r + 0.55) * ch) / 4.2; if (sx < cw - sr) { x.beginPath(); x.arc(sx, sy, sr, 0, TAU); x.fill(); } }
+      for (let i = 0; i < 13; i++) { x.fillStyle = i % 2 ? '#FFFFFF' : '#B31942'; x.fillRect(0, (i * uh) / 13, uw, uh / 13 + 0.6); }
+      const cw = uh * 0.76, ch = (uh * 7) / 13; x.fillStyle = '#0A3161'; x.fillRect(0, 0, cw, ch);
+      x.fillStyle = '#FFFFFF'; const sr = Math.max(0.35, uh * 0.026);
+      for (let r = 0; r < 9; r++) for (let q = 0; q < 11; q++) if ((r + q) % 2 === 0) { x.beginPath(); x.arc(((q + 1) * cw) / 12, ((r + 1) * ch) / 10, sr, 0, TAU); x.fill(); }
     });
     const ph = Math.max(10, H * 0.072), pw = ph * 1.42;
     const pin = off(pw, ph, x => {
@@ -1194,10 +1194,11 @@ const Scene = (() => {
     });
     flags = { us, pin };
   }
-  function wavy(F, ax, ay, ang, ph, amp, L) {
-    c.save(); c.translate(ax, ay); c.rotate(ang);
-    const n = Math.max(10, Math.round(F.w / 1.4)), sw = F.w / n, tops = [];
-    for (let i = 0; i <= n; i++) { const t = i / n; tops.push(Math.sin(ph - t * 5.2) * amp * t); }
+  function wavy(F, ax, ay, droop, ph, amp, L) {
+    c.save(); c.translate(ax, ay);
+    const sq = 1 - 0.22 * Math.sin(droop); c.scale(sq, 1);
+    const n = Math.max(10, Math.round(F.w / 1.4)), sw = F.w / n, tops = [], dy = Math.sin(droop) * F.w * 0.95;
+    for (let i = 0; i <= n; i++) { const t = i / n; tops.push(Math.sin(ph - t * 5.2) * amp * t + dy * Math.pow(t, 1.35)); }
     for (let i = 0; i < n; i++) {
       const t = i / n, o = tops[i];
       c.drawImage(F.cv, (i * sw) * dpr, 0, sw * dpr + 1, F.h * dpr, i * sw, o, sw + 0.7, F.h);
@@ -1216,8 +1217,9 @@ const Scene = (() => {
     buildFlags();
     const L = lw(), k = g.k;
     // American flag on the clubhouse pole, moved by the breeze only
-    const fpTop = g.hy - H * 0.2, uLift = Math.min(1, 0.6 + wind * 0.5);
-    wavy(flags.us, g.poleX + 0.8, fpTop + 1.5 * k, (1 - uLift) * 0.8, time * (2.5 + uLift * 5), (0.5 + uLift * 1.4) * k, L * 0.8);
+    const fpTop = g.hy - H * 0.2, uLift = Math.min(1, 0.6 + wind * 0.5), hx = g.poleX + 1.3 * k - 0.4, hy0 = fpTop + 0.8 * k;
+    wavy(flags.us, hx, hy0, (1 - uLift) * 0.75, time * (2.5 + uLift * 5), (0.6 + uLift * 1.8) * k, L * 0.8);
+    c.fillStyle = NAVY; [hy0 + 0.6 * k, hy0 + flags.us.h - 0.6 * k].forEach(cy => { c.fillRect(g.poleX - 1.6 * k, cy - 0.75 * k, 3.4 * k, 1.5 * k); });
     // the pin: cup with its white liner, flagstick, SubAir flag
     const x = g.cupX, y = g.cupY, top = y - H * 0.31;
     c.beginPath(); c.ellipse(x, y, 4.4 * k, 1.5 * k, 0, 0, TAU); c.fillStyle = '#121812'; c.fill(); c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 0.9; c.stroke();
@@ -1226,7 +1228,7 @@ const Scene = (() => {
     c.strokeStyle = '#FBFBF7'; c.lineWidth = 1.7 * k; c.beginPath(); c.moveTo(x, y - 0.6); c.lineTo(x, top + 0.6); c.stroke();
     c.fillStyle = '#C9CDD0'; c.beginPath(); c.arc(x, top, 1.3 * k, 0, TAU); c.fill();
     const lift = Math.min(1, 0.6 + flagWind), ang = (1 - lift) * 0.9, amp = (0.6 + lift * 2.1) * k, ph = time * (3 + lift * 8);
-    wavy(flags.pin, x + 0.9, top + 0.6 * k, ang, ph, amp, L);
+    wavy(flags.pin, x + 1.45 * k - 0.4, top + 0.6 * k, ang, ph, amp, L);
     if (!ball) { c.beginPath(); c.arc(x + 15 * k, y + 1.2 * k, 1.9 * k, 0, TAU); c.fillStyle = '#FFFFFF'; c.fill(); c.strokeStyle = INK; c.lineWidth = 0.7; c.stroke(); }
   }
 
